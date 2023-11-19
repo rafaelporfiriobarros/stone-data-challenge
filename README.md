@@ -39,7 +39,7 @@ um para cada momento da jornada de seu respectivo contrato.
 
 > Livro: [Manual de Análise de Dados](https://www.amazon.com.br/Manual-An%C3%A1lise-Dados-Luiz-F%C3%A1vero/dp/8535270876/ref=sr_1_9?__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=13X6DL3LVB2F0&keywords=estatistica&qid=1700422688&sprefix=estatistica%2Caps%2C177&sr=8-9&ufe=app_do%3Aamzn1.fos.fcd6d665-32ba-4479-9f21-b774e276a678).
 
-> Curso: [Asimov](https://hub.asimov.academy/)
+> Curso: [Asimov](https://asimov.academy/)
 
 > Curso: [Universidade dos Dados](https://hotmart.com/pt-br/marketplace/produtos/clube-de-assinaturas-da-universidade-dos-dados/Y79687647W)
 
