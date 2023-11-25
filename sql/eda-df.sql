@@ -132,6 +132,67 @@ from df order by meses_ate_primeira_acao desc limit 10;
 select contrato_id || ' ' || nr_documento as cliente_completo from df;
 
 
+-------------------- OPERADORES COM COMPARAÇÃO --------------------
+
+-- 17. Crie uma coluna que retorne TRUE sempre que um contrato receba campanhaobservacao (acao).
+
+select contrato_id, acao, (acao = 'campanhaobservacao') as campanha_observacao from df;
+
+-------------------- OPERADORES LÓGICOS --------------------
+
+-- 18. Selecione os contratos que possuem valores desembolsados entre 10.000 e 20.000 reais
+-- e ordene pelo maior valor (desc).
+
+-- opção 1
+select contrato_id, vlr_desembolsado from df 
+where vlr_desembolsado >= 10000 and vlr_desembolsado <= 20000
+order by vlr_desembolsado desc;
+
+-- opção 2
+select contrato_id, vlr_desembolsado from df 
+where vlr_desembolsado between 10000 and 20000
+order by vlr_desembolsado desc;
+
+-- 19. Selecione os contratos que possuem valores desembolsados abaixo de 10.000 ou acima de 20.000
+
+-- opção 1
+select contrato_id, vlr_desembolsado from df
+where vlr_desembolsado < 10000 or vlr_desembolsado > 20000;
+
+-- opção 2
+select contrato_id, vlr_desembolsado from df
+where vlr_desembolsado not between 10000 and 20000;
+
+-- 19. Selecione os contratos que tenham o status como LIDO ou RESPONDIDO.
+
+-- opção 1
+select contrato_id, status from df
+where status = 'LIDO' or status = 'RESPONDIDO';
+
+-- opção 2
+select contrato_id, status from df
+where status in ('LIDO', 'RESPONDIDO');
+
+-- 20. Selecione os contratos que não tenham o status como LIDO ou RESPONDIDO.
+
+-- opção 2
+select contrato_id, status from df
+where status not in ('LIDO', 'RESPONDIDO');
+
+-- 21. Selecione os primeiros nomes distintos de cidade da tabela df 
+-- que começam com as iniciais São ou Sao.
+
+select distinct cidade from df where cidade like 'São%' or cidade like 'Sao%';
+
+-- 22. Usando o comando ILIKE, selecione os primeiros nomes distintos de cidade da tabela df 
+-- que começam com as iniciais são ou sao.
+
+select distinct cidade from df where cidade ilike 'são%' or cidade ilike 'sao%';
+
+-- 23. Selecionar todas as colunas e verificar qual coluna há valores nulos. 
+
+select * from df where not (df is not null);
+
 
 
 
