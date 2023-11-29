@@ -33,7 +33,7 @@ Quando um cliente começa a apresentar dificuldade na liquidação de seus contr
 As comunicações são disparadas por contrato, sendo assim, um cliente pode receber diversas comunicações com diferentes conteúdos, 
 um para cada momento da jornada de seu respectivo contrato.
 
-***Mais detalhes no Notebook***
+***Mais detalhes no Notebook - Em construção***
 
 # REFERÊNCIAS DE ESTUDO 
 
