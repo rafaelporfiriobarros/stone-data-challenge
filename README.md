@@ -35,6 +35,20 @@ um para cada momento da jornada de seu respectivo contrato.
 
 ***Mais detalhes no Notebook - Em construção***
 
+# Dashboard Inicial - Engajamento e Efetividade
+
+O primeiro Dashboard mostra alguns gráficos e filtros com relação aos Engajamentos e a Efetividade dos contratos, entre outras informações.
+
+Porquê?
+
+O **Engajamento** é uma Flag que indica se o cliente está recebendo, lendo e respondendo os comunicados, ou não.
+
+Se o Comunicado recebido tenha sido Lido e Respondido, leva um valor Positivo, caso o contrário, leva um valor Negativo.
+
+E a **Efetividade** foi determinada com a Flag de Transação Positiva, quando houve algum valor transacionado na maquininha do cliente junto com o Engajamento Positivo.
+
+> Link: [Dashboard](https://app.powerbi.com/view?r=eyJrIjoiYTQyNDExNzMtOWZlMi00NjkyLTlhNGEtZmE4YWM3ZGMwMjEwIiwidCI6IjZjY2E5MGExLTkzYTAtNDNlYS05YTA0LTZjZDU3MmFiZjlmMCJ9)
+
 # REFERÊNCIAS DE ESTUDO 
 
 > Livro: [Manual de Análise de Dados](https://www.amazon.com.br/Manual-An%C3%A1lise-Dados-Luiz-F%C3%A1vero/dp/8535270876/ref=sr_1_9?__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=13X6DL3LVB2F0&keywords=estatistica&qid=1700422688&sprefix=estatistica%2Caps%2C177&sr=8-9&ufe=app_do%3Aamzn1.fos.fcd6d665-32ba-4479-9f21-b774e276a678).
