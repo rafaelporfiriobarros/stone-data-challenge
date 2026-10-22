@@ -1,102 +1,81 @@
 # Stone Data Challenge
 
-**End-to-End Data Engineering, Analytics & Machine Learning**
+**Engenharia de Dados, Analytics e Machine Learning aplicados à análise de contratos e pagamentos.**
 
-Projeto de Engenharia de Dados e Machine Learning desenvolvido para analisar dados de contratos financeiros, transações e comunicações, com foco na construção de uma base analítica confiável e na avaliação de um modelo preditivo de comportamento de pagamentos.
+Projeto de portfólio desenvolvido para demonstrar a construção de uma solução de dados de ponta a ponta, desde a ingestão de fontes heterogêneas até a avaliação de modelos preditivos, com atenção à qualidade, rastreabilidade e governança.
+
+> **Status:** projeto analítico implementado e testado. Modelo preditivo classificado como **experimental**.
 
 ## 1. Contexto de negócio
 
-Em operações de crédito vinculadas a recebíveis de vendas, compreender o comportamento financeiro dos contratos pode apoiar atividades de acompanhamento de carteira e planejamento operacional.
+O projeto investiga dados relacionados a contratos de crédito, pagamentos, transações financeiras (TPV) e ações de comunicação com clientes.
 
-O projeto investiga a relação entre características contratuais, histórico de comunicações e um indicador de pagamento observado nos sete dias seguintes.
+O desafio é organizar essas informações em uma estrutura analítica confiável e investigar padrões associados à ocorrência de pagamentos.
 
-**Importante:** o indicador utilizado representa a presença de valores positivos no campo `vlr_pgto_realizado` em snapshots futuros. Sua equivalência a novos pagamentos financeiros ainda não foi comprovada.
+Entre as perguntas abordadas estão:
 
-## 2. Objetivos
+- Como integrar informações de contratos, clientes, transações e comunicações?
+- Como garantir a consistência dos dados antes de utilizá-los em análises?
+- Quais características estão associadas ao indicador de pagamento observado?
+- Como avaliar um modelo respeitando a sequência temporal dos dados?
+- Como identificar limitações que impedem o uso seguro de um modelo em produção?
 
-- Integrar dados de diferentes fontes em uma arquitetura analítica.
-- Implementar pipelines de ingestão, padronização e transformação.
-- Construir tabelas dimensionais e fatos em Parquet.
-- Desenvolver análises exploratórias de carteira e comunicações.
-- Criar um dataset supervisionado com janelas temporais.
-- Treinar e avaliar modelos preditivos.
-- Auditar a integridade do target e a consistência histórica das features.
-- Documentar riscos, resultados e limitações.
+## 2. Arquitetura da solução
 
-## 3. Arquitetura
+```mermaid
+flowchart TD
+    A["Fontes: contratos, TPV, comunicações e clientes"]
+    B["Bronze: ingestão"]
+    C["Silver: padronização e qualidade"]
+    D["Gold: dimensões e fatos"]
+    E["Base analítica: observações semanais"]
+    F["Machine Learning: treinamento e calibração"]
+    G["Avaliação temporal e estabilidade"]
+    H["Auditoria e governança"]
 
-```text
-Fontes de dados
-      |
-      v
-    Bronze
-      |
-      v
-    Silver
-      |
-      v
-     Gold
-      |
-      +----> Analytics / EDA
-      |
-      v
-  ML Dataset
-      |
-      v
-Temporal Split
-      |
-      v
-Model Training
-      |
-      v
-Calibration & Evaluation
-      |
-      v
-Audits & Governance
+    A --> B --> C --> D --> E --> F --> G --> H
 ```
 
-A solução utiliza armazenamento local em Parquet e processamento analítico com DuckDB.
+A arquitetura utiliza Python, DuckDB e Parquet, com separação entre ingestão, tratamento, modelagem analítica e experimentação preditiva.
 
-## 4. Tecnologias
+[Detalhes da arquitetura](docs/arquitetura.md)
+
+## 3. Tecnologias utilizadas
 
 | Tecnologia | Aplicação |
 |---|---|
-| Python | Pipelines e análises |
-| DuckDB | Consultas e transformações analíticas |
+| Python | Desenvolvimento de pipelines, análises e modelos |
+| DuckDB | Processamento e consultas analíticas |
 | Parquet | Armazenamento colunar |
-| scikit-learn | Treinamento, calibração e avaliação |
+| pandas e scikit-learn | Processamento analítico e Machine Learning |
 | pytest | Testes automatizados |
 | UV | Gerenciamento do ambiente Python |
-| Git | Versionamento do projeto |
+| Git e GitHub | Versionamento |
+| GitHub Actions | Integração contínua da demonstração sintética |
 
-## 5. Camada Gold
+## 4. Engenharia de Dados
 
-A arquitetura analítica contém:
+A solução organiza as fontes em camadas Bronze, Silver e Gold, com verificações de tipos, integridade, unicidade e reconciliação.
+
+### Camada Gold
 
 | Tabela | Registros |
 |---|---:|
-| `fact_contrato_diario` | 8.061.006 |
-| `fact_tpv_diario` | 4.408.597 |
-| `fact_comunicacoes` | 403.740 |
-| `dim_clientes` | 14.265 |
-| `dim_contratos` | 14.756 |
+| Dimensão de clientes | 14.265 |
+| Dimensão de contratos | 14.756 |
+| Fato diário de contratos | 8.061.006 |
+| Fato diário de TPV | 4.408.597 |
+| Fato de comunicações | 403.740 |
 
-Foram implementadas verificações de integridade, unicidade e reconciliação entre camadas.
+Esses volumes correspondem aos artefatos analíticos utilizados no desenvolvimento local.
 
-## 6. Machine Learning
+## 5. Machine Learning
 
-O dataset supervisionado contém 801.725 observações semanais.
+Foi construída uma base de observações semanais de contratos para investigar a previsão de um indicador de pagamento em uma janela futura de sete dias.
 
-### Variáveis utilizadas
+A base contém **801.725 observações**, distribuídas entre 14.746 contratos.
 
-- `prazo`
-- `vlr_desembolsado`
-- `perc_retencao`
-- `campanhas_7d`
-- `campanhas_30d`
-- `dias_com_acionamento_30d`
-
-### Divisão temporal
+A avaliação utilizou separação temporal, com intervalo de segurança entre os conjuntos.
 
 | Conjunto | Observações |
 |---|---:|
@@ -104,98 +83,95 @@ O dataset supervisionado contém 801.725 observações semanais.
 | Validação | 58.863 |
 | Teste | 31.570 |
 
-Foi utilizado um intervalo de embargo de 14 dias entre os conjuntos, visando reduzir a sobreposição temporal entre as janelas de previsão.
+Foram avaliados modelos de referência e regressão logística, incluindo calibração de probabilidades.
 
-### Modelos
-
-Foram avaliados um modelo de referência (*Dummy Classifier*) e uma regressão logística, incluindo experimentos de ablação das features de campanhas e calibração de probabilidades.
-
-## 7. Resultados
+### Resultados da regressão logística no teste
 
 | Métrica | Resultado |
 |---|---:|
-| ROC-AUC no teste | 0,7849 |
-| PR-AUC no teste | 0,7208 |
+| ROC AUC | 0,7849 |
+| PR AUC | 0,7208 |
 | Brier Score antes da calibração | 0,2527 |
 | Brier Score após a calibração | 0,2025 |
-| Desvio médio de calibração | +9,42 p.p. |
+| Taxa observada do indicador positivo | 44,82% |
+| Probabilidade média prevista após calibração | 54,24% |
 
-A calibração reduziu o Brier Score, mas o modelo continuou superestimando a taxa positiva observada no teste.
+Embora a calibração tenha melhorado o Brier Score, a probabilidade média prevista permaneceu aproximadamente **9,42 pontos percentuais acima** da taxa observada.
 
-Essas métricas avaliam a previsão do target operacional definido neste projeto e não comprovam capacidade de prever novos pagamentos financeiros.
+Esse resultado indica uma limitação relevante de calibração no período de teste.
 
-## 8. Auditorias e governança
+**Atenção à definição do alvo:** o indicador utilizado é uma aproximação construída a partir da presença de valores positivos em snapshots futuros. Não foi comprovado que ele represente exclusivamente novos pagamentos realizados na janela de sete dias.
 
-### Target Integrity Audit
+Por esse motivo, os resultados não devem ser interpretados como uma previsão validada de recebimentos futuros.
 
-- 97.188 observações auditadas.
-- 100% das janelas analisadas estavam completas.
-- Nenhuma divergência entre o target armazenado e sua reconstrução operacional.
-- 723 divergências na comparação exploratória com um target baseado em incrementos.
+## 6. Qualidade, auditoria e governança
 
-### Point-in-Time Audit
+Foram implementadas verificações adicionais para avaliar a consistência da solução:
 
-- 97.188 observações auditadas.
-- Nenhum snapshot financeiro ausente.
-- Nenhuma divergência na reconstrução das seis features.
+- **Auditoria do indicador-alvo:** comparação entre a regra utilizada e uma aproximação alternativa baseada em variações positivas.
+- **Auditoria temporal das features:** reconstrução de características a partir das datas de observação.
+- **Análise de estabilidade:** acompanhamento do comportamento das previsões ao longo do tempo e entre segmentos.
+- **Governança:** documentação das métricas, limitações e riscos identificados.
 
-A auditoria valida consistência histórica segundo as regras implementadas, mas não comprova disponibilidade operacional em tempo real.
+Na auditoria temporal, foram examinadas **97.188 observações** de validação e teste, sem divergências nas seis features reconstruídas.
 
-### Model Governance
+Esse resultado não comprova, isoladamente, que todos os dados estivessem disponíveis operacionalmente nas respectivas datas.
 
-Foram documentados quatro riscos: semântica do target, desvio temporal de calibração, disponibilidade dos dados e interpretação causal das campanhas.
+**Classificação do modelo: EXPERIMENTAL.**
 
-**Status do modelo: EXPERIMENTAL.**
+## 7. Testes automatizados
 
-## 9. Qualidade e testes
+O projeto possui **126 testes aprovados no ambiente local**, cobrindo diferentes componentes da solução.
 
-A suíte automatizada possui **114 testes aprovados**, abrangendo ingestão, Silver, Gold, construção do dataset, divisão temporal, treinamento, avaliação e auditorias.
+A suíte completa utiliza dados e artefatos previamente preparados e, portanto, não é executável integralmente a partir de uma instalação limpa sem essas dependências.
 
-Execução dos testes:
+Para permitir uma validação independente, foi criada uma demonstração com dados totalmente sintéticos.
 
-```powershell
-uv sync
-uv run pytest -v
-```
+## 8. Demonstração reproduzível
 
-Os testes de integração dependem dos artefatos de dados previamente gerados. Os dados originais não são distribuídos automaticamente neste repositório.
+A demonstração implementa um fluxo simplificado Bronze → Silver → Gold, sem depender dos dados originais.
 
-## 10. Limitações
-
-1. A definição financeira do target precisa ser validada com a fonte de origem.
-2. A disponibilidade operacional das features não foi comprovada por timestamps de ingestão.
-3. O modelo apresenta superestimação das probabilidades no período de teste.
-4. A relação entre campanhas e comportamento financeiro é observacional, não causal.
-5. A disponibilidade temporal das fontes varia; o histórico de TPV não cobre todo o período de avaliação.
-
-## 11. Conclusão
-
-O Stone Data Challenge demonstra a construção de uma solução de dados ponta a ponta, integrando engenharia de dados, modelagem analítica, aprendizado supervisionado, testes automatizados e governança.
-
-O principal resultado do projeto não é apenas o desempenho preditivo, mas a capacidade de construir uma solução rastreável, reproduzível e tecnicamente auditável, identificando também as limitações que impedem sua utilização imediata em produção.
-
-**Projeto de estudo e portfólio técnico. Não representa um sistema financeiro em produção.**
-
-## Reproducible Demo & CI/CD
-
-This repository includes an independent synthetic-data demonstration that runs without the original datasets.
-
-The demonstration covers:
-
-- Deterministic synthetic data generation
-- Bronze, Silver and Gold transformations
-- Data integrity and financial reconciliation
-- Automated tests
-- Continuous integration with GitHub Actions
-
-**Run locally:**
+Para executar:
 
 ```powershell
 uv sync
-uv run python -m stone_data_challenge.demo_pipeline --output data/demo
+uv run python -m stone_data_challenge.demo_pipeline --output data/demo --contracts 100 --seed 42
 uv run pytest tests/test_demo_pipeline.py -v
 ```
 
-See [Reproducible Demo](docs/reproducible_demo.md) for details.
+A demonstração gera contratos, pagamentos e campanhas artificiais, aplica transformações e verifica integridade e reconciliação financeira.
 
-**Note:** The synthetic demo validates a simplified pipeline. It does not reproduce the original Machine Learning experiments.
+**Validação realizada:** 12 testes aprovados localmente e execução bem-sucedida do workflow de integração contínua no GitHub Actions.
+
+[Documentação da demonstração](docs/reproducible_demo.md)
+
+## 9. Limitações
+
+Este projeto é um estudo técnico e não uma solução de decisão de crédito pronta para produção.
+
+As principais limitações identificadas incluem:
+
+1. O indicador-alvo depende da interpretação dos valores presentes nos snapshots.
+2. Existe desvio de calibração no período de teste.
+3. A disponibilidade operacional histórica das informações não foi integralmente comprovada.
+4. As associações entre campanhas e pagamentos não demonstram causalidade.
+5. A demonstração sintética não reproduz a distribuição estatística dos dados originais.
+
+Essas limitações são parte da análise técnica e orientam os próximos passos necessários antes de qualquer aplicação operacional.
+
+## 10. Documentação
+
+- [Arquitetura técnica](docs/arquitetura.md)
+- [Estudo de caso](docs/estudo_de_caso.md)
+- [Metodologia](docs/methodology.md)
+- [Resultados](docs/results.md)
+- [Limitações](docs/limitations.md)
+- [Demonstração reproduzível](docs/reproducible_demo.md)
+
+## 11. Considerações finais
+
+O Stone Data Challenge demonstra a integração entre Engenharia de Dados, Analytics, Machine Learning e práticas de Engenharia de Software.
+
+O principal aprendizado é que desenvolver um modelo com métricas aparentemente satisfatórias não é suficiente. Também é necessário verificar a definição do problema, a confiabilidade dos dados, a consistência temporal e os riscos de utilização dos resultados.
+
+**Projeto independente de portfólio. Não representa uma solução oficial da Stone nem uma implantação em produção.**
