@@ -40,6 +40,20 @@ A arquitetura utiliza Python, DuckDB e Parquet, com separação entre ingestão,
 
 [Detalhes da arquitetura](docs/arquitetura.md)
 
+## Evidências técnicas
+
+| Indicador | Resultado |
+|---|---:|
+| Registros na camada Gold | 12.902.504 |
+| Observações de Machine Learning | 801.725 |
+| ROC AUC no teste | 0,7849 |
+| Brier Score calibrado | 0,2025 |
+| Testes automatizados locais | 126 aprovados |
+
+**Modelo experimental:** as métricas se referem a um indicador-alvo cuja semântica financeira ainda necessita de validação. As probabilidades também apresentam superestimação no teste.
+
+[Consultar evidências técnicas completas](docs/evidencias_tecnicas.md)
+
 ## 3. Tecnologias utilizadas
 
 | Tecnologia | Aplicação |
