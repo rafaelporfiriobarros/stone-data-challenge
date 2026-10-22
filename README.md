@@ -143,7 +143,7 @@ A demonstração gera contratos, pagamentos e campanhas artificiais, aplica tran
 
 **Validação realizada:** 12 testes aprovados localmente e execução bem-sucedida do workflow de integração contínua no GitHub Actions.
 
-[Documentação da demonstração](docs/reproducible_demo.md)
+[Documentação da demonstração](docs/demo_reprodutivel.md)
 
 ## 9. Limitações
 
@@ -163,10 +163,11 @@ Essas limitações são parte da análise técnica e orientam os próximos passo
 
 - [Arquitetura técnica](docs/arquitetura.md)
 - [Estudo de caso](docs/estudo_de_caso.md)
-- [Metodologia](docs/methodology.md)
-- [Resultados](docs/results.md)
-- [Limitações](docs/limitations.md)
-- [Demonstração reproduzível](docs/reproducible_demo.md)
+- [Metodologia](docs/metodologia.md)
+- [Resultados](docs/resultados.md)
+- [Limitações](docs/limitacoes.md)
+- [Demonstração reproduzível](docs/demo_reprodutivel.md)
+
 
 ## 11. Considerações finais
 
