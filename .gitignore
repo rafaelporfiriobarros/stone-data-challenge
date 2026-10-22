@@ -1,0 +1,48 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Virtual environment
+.venv/
+venv/
+
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Local datasets
+data/
+*.duckdb
+*.duckdb.wal
+*.parquet
+*.csv
+*.xlsx
+
+# Trained models and reports
+models/
+reports/
+
+# Local notebooks
+.ipynb_checkpoints/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Keep UV lockfile versioned
+!uv.lock
