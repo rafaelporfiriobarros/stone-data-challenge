@@ -1,0 +1,45 @@
+
+name: Stone Data Challenge - Synthetic Demo CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  synthetic-demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Execute synthetic pipeline
+        run: |
+          uv run python -m stone_data_challenge.demo_pipeline \
+            --output data/demo \
+            --contracts 100 \
+            --seed 42
+
+      - name: Run independent demo tests
+        run: |
+          uv run pytest tests/test_demo_pipeline.py -v
+
+      - name: Upload demo report
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stone-synthetic-demo-report
+          path: data/demo/demo_report.json
+          retention-days: 7

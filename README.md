@@ -175,3 +175,27 @@ O Stone Data Challenge demonstra a construção de uma solução de dados ponta 
 O principal resultado do projeto não é apenas o desempenho preditivo, mas a capacidade de construir uma solução rastreável, reproduzível e tecnicamente auditável, identificando também as limitações que impedem sua utilização imediata em produção.
 
 **Projeto de estudo e portfólio técnico. Não representa um sistema financeiro em produção.**
+
+## Reproducible Demo & CI/CD
+
+This repository includes an independent synthetic-data demonstration that runs without the original datasets.
+
+The demonstration covers:
+
+- Deterministic synthetic data generation
+- Bronze, Silver and Gold transformations
+- Data integrity and financial reconciliation
+- Automated tests
+- Continuous integration with GitHub Actions
+
+**Run locally:**
+
+```powershell
+uv sync
+uv run python -m stone_data_challenge.demo_pipeline --output data/demo
+uv run pytest tests/test_demo_pipeline.py -v
+```
+
+See [Reproducible Demo](docs/reproducible_demo.md) for details.
+
+**Note:** The synthetic demo validates a simplified pipeline. It does not reproduce the original Machine Learning experiments.
