@@ -32,8 +32,9 @@ flowchart TD
     F["Machine Learning: treinamento e calibração"]
     G["Avaliação temporal e estabilidade"]
     H["Auditoria e governança"]
+    I["Análise de negócio e robustez temporal"]
 
-    A --> B --> C --> D --> E --> F --> G --> H
+    A --> B --> C --> D --> E --> F --> G --> H --> I
 ```
 
 A arquitetura utiliza Python, DuckDB e Parquet, com separação entre ingestão, tratamento, modelagem analítica e experimentação preditiva.
@@ -44,7 +45,7 @@ A arquitetura utiliza Python, DuckDB e Parquet, com separação entre ingestão,
 
 | Indicador | Resultado |
 |---|---:|
-| Registros na camada Gold | 12.902.504 |
+| Registros na camada Gold | 12.902.364 |
 | Observações de Machine Learning | 801.725 |
 | ROC AUC no teste | 0,7849 |
 | Brier Score calibrado | 0,2025 |
@@ -118,7 +119,44 @@ Esse resultado indica uma limitação relevante de calibração no período de t
 
 Por esse motivo, os resultados não devem ser interpretados como uma previsão validada de recebimentos futuros.
 
-## 6. Qualidade, auditoria e governança
+## 6. Resultados da análise de negócio
+
+A análise descritiva considerou **801.725 observações semanais** de **14.746 contratos**, entre **06/01/2020 e 11/04/2022**. A taxa geral do indicador `target_pagamento_7d` foi de **77,64%** (622.468 observações positivas). Como cada contrato pode aparecer em diversas semanas, as observações não são independentes.
+
+### Características financeiras
+
+| Segmento | Taxa do indicador positivo |
+|---|---:|
+| Valor desembolsado abaixo de R$ 2 mil | 61,07% |
+| Valor desembolsado de R$ 2 mil a menos de R$ 5 mil | 67,14% |
+| Valor desembolsado de R$ 5 mil a menos de R$ 10 mil | 71,99% |
+| Valor desembolsado de R$ 10 mil ou mais | 80,00% |
+| Prazo de até 12 meses | 67,32% |
+| Prazo de 13 a 24 meses | 67,60% |
+| Prazo de 25 a 36 meses | 79,11% |
+
+### Frequência de campanhas
+
+| Campanhas nos últimos 30 dias | Observações | Taxa do indicador positivo |
+|---|---:|---:|
+| Nenhuma | 502.912 | 86,74% |
+| Uma | 122.670 | 64,70% |
+| Duas a três | 109.402 | 68,11% |
+| Quatro ou mais | 66.741 | 48,49% |
+
+A associação entre maior frequência de campanhas e taxas menores do indicador **persistiu nas segmentações por valor e prazo**. Na análise de **dez trimestres**, as observações sem campanhas apresentaram taxas superiores às observações com campanhas em todos os períodos. A faixa de quatro ou mais campanhas teve a menor taxa em nove dos dez trimestres. As taxas também mudaram substancialmente ao longo do tempo.
+
+**Interpretação:** a frequência de campanhas pode refletir a seleção de contratos com maior risco. Os resultados são **observacionais e não demonstram efeito causal** das campanhas sobre pagamentos.
+
+### Informação preditiva incremental
+
+Na mesma amostra de validação temporal (**58.863 observações**), a inclusão de características de comunicação elevou o **ROC AUC de 0,7745 para 0,8047** (+0,0302) e o **PR AUC de 0,7592 para 0,8156** (+0,0564), em comparação ao modelo com características financeiras apenas. O Brier Score também melhorou de 0,2134 para 0,2087. Esses ganhos dizem respeito à **validação**, não à avaliação final de teste, e não representam impacto financeiro ou causalidade.
+
+O indicador-alvo ainda necessita de validação semântica como evento de **novo pagamento**. Assim, a pergunta de negócio foi respondida no escopo **descritivo e preditivo experimental**, não no escopo causal ou de decisão operacional.
+
+[Conclusão de negócio detalhada](docs/conclusao_negocio.md)
+
+## 7. Qualidade, auditoria e governança
 
 Foram implementadas verificações adicionais para avaliar a consistência da solução:
 
@@ -133,7 +171,7 @@ Esse resultado não comprova, isoladamente, que todos os dados estivessem dispon
 
 **Classificação do modelo: EXPERIMENTAL.**
 
-## 7. Testes automatizados
+## 8. Testes automatizados
 
 O projeto possui **126 testes aprovados no ambiente local**, cobrindo diferentes componentes da solução.
 
@@ -141,7 +179,7 @@ A suíte completa utiliza dados e artefatos previamente preparados e, portanto, 
 
 Para permitir uma validação independente, foi criada uma demonstração com dados totalmente sintéticos.
 
-## 8. Demonstração reproduzível
+## 9. Demonstração reproduzível
 
 A demonstração implementa um fluxo simplificado Bronze → Silver → Gold, sem depender dos dados originais.
 
@@ -159,7 +197,7 @@ A demonstração gera contratos, pagamentos e campanhas artificiais, aplica tran
 
 [Documentação da demonstração](docs/demo_reprodutivel.md)
 
-## 9. Limitações
+## 10. Limitações
 
 Este projeto é um estudo técnico e não uma solução de decisão de crédito pronta para produção.
 
@@ -173,7 +211,7 @@ As principais limitações identificadas incluem:
 
 Essas limitações são parte da análise técnica e orientam os próximos passos necessários antes de qualquer aplicação operacional.
 
-## 10. Documentação
+## 11. Documentação
 
 - [Arquitetura técnica](docs/arquitetura.md)
 - [Estudo de caso](docs/estudo_de_caso.md)
@@ -181,11 +219,14 @@ Essas limitações são parte da análise técnica e orientam os próximos passo
 - [Resultados](docs/resultados.md)
 - [Limitações](docs/limitacoes.md)
 - [Demonstração reproduzível](docs/demo_reprodutivel.md)
+- [Conclusão de negócio](docs/conclusao_negocio.md)
 
 
-## 11. Considerações finais
+## 12. Considerações finais
 
 O Stone Data Challenge demonstra a integração entre Engenharia de Dados, Analytics, Machine Learning e práticas de Engenharia de Software.
+
+A análise de negócio encontrou associações recorrentes entre características contratuais, histórico de comunicação e o indicador construído, além de ganho preditivo incremental na validação temporal. Essas evidências não identificam efeitos causais.
 
 O principal aprendizado é que desenvolver um modelo com métricas aparentemente satisfatórias não é suficiente. Também é necessário verificar a definição do problema, a confiabilidade dos dados, a consistência temporal e os riscos de utilização dos resultados.
 
